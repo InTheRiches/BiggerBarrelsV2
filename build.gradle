@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id "xyz.jpenilla.run-paper" version "2.3.1"
 }
 
 apply plugin: "maven-publish"
 
 group = 'net.riches'
-version = 'A.05-Lands-Update'
+version = 'A.06-hopper-optimization'
 
 repositories {
     mavenCentral()
@@ -28,11 +29,16 @@ repositories {
         url = "https://maven.playpro.com"
     }
 
+    maven {
+        name = "minebench-repo"
+        url = "https://repo.minebench.de/"
+    }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT'
 
+    compileOnly("com.acrobot.chestshop:chestshop:3.12")
     compileOnly 'com.github.TechFortress:GriefPrevention:16.18.1'
     compileOnly "com.github.angeschossen:LandsAPI:6.37.0"
     compileOnly('net.coreprotect:coreprotect:21.3')
@@ -40,7 +46,11 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: '*.jar')
 }
 
-def targetJavaVersion = 17
+runServer {
+    minecraftVersion("1.21.8") // Match your dev target
+}
+
+def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -75,7 +85,7 @@ publishing {
             from components.java
 
             artifact sourceJar {
-                classifier "sources"
+                archiveClassifier.set("sources")
             }
         }
     }
